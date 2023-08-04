@@ -1,37 +1,30 @@
-<script>
-import { XMarkIcon } from "@heroicons/vue/24/outline";
-import { formatCount } from "@/utils/format";
+<script lang="ts" setup>
+  import { XMarkIcon } from '@heroicons/vue/24/outline'
+  import { formatCount } from '@/utils/format'
+  import { Book } from '@/types'
+  import { computed } from 'vue'
 
-export default {
-  components: { XMarkIcon },
-  props: {
-    book: {
-      type: Object,
-      required: true,
-    },
-  },
-  emits: ["delete-book"],
-  computed: {
-    statusColor() {
-      switch (this.book.genre) {
-        case "Fantasy":
-          return "bg-yellow-100 text-yellow-800";
-        case "Fiction":
-          return "bg-green-100 text-green-800";
-        case "Psychology":
-          return "bg-red-100 text-red-800";
-        default:
-          return "bg-cyan-100 text-cyan-800";
-      }
-    },
-  },
-  methods: {
-    formatCount,
-    deleteBook() {
-      this.$emit("delete-book", this.book);
-    },
-  },
-};
+  const props = defineProps<{ book: Book }>()
+
+  const emit = defineEmits<{
+    (e: 'delete-book', book: Book): void
+  }>()
+
+  const statusColor = computed(() => {
+    switch (props.book.genre) {
+      case 'Fantasy':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'Fiction':
+        return 'bg-green-100 text-green-800'
+      case 'Psychology':
+        return 'bg-red-100 text-red-800'
+      default:
+        return 'bg-cyan-100 text-cyan-800'
+    }
+  })
+  const deleteBook = () => {
+    emit('delete-book', props.book)
+  }
 </script>
 
 <template>
@@ -44,8 +37,7 @@ export default {
         <div class="flex flex-shrink-0 ml-2">
           <p
             class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
-            :class="statusColor"
-          >
+            :class="statusColor">
             {{ book.genre }}
           </p>
         </div>
@@ -53,14 +45,12 @@ export default {
       <div class="mt-2 sm:flex sm:justify-between">
         <div class="sm:flex">
           <p
-            class="flex items-center font-light text-gray-500 text-md dark:text-gray-300"
-          >
+            class="flex items-center font-light text-gray-500 text-md dark:text-gray-300">
             {{ book.author }}
           </p>
           <p
             v-if="book.printRun"
-            class="flex items-center text-xs pt-1 font-light text-orange-300 ml-2"
-          >
+            class="flex items-center text-xs pt-1 font-light text-orange-300 ml-2">
             ({{ formatCount(book.printRun) }} copies)
           </p>
         </div>
@@ -68,7 +58,6 @@ export default {
     </div>
     <XMarkIcon
       @click="deleteBook"
-      class="block h-6 w-6 cursor-pointer text-red-400 float-right -mt-6"
-    />
+      class="block h-6 w-6 cursor-pointer text-red-400 float-right -mt-6" />
   </div>
 </template>
