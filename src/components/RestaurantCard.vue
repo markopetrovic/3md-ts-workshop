@@ -1,36 +1,32 @@
-<script>
-import { XMarkIcon } from "@heroicons/vue/24/outline";
-export default {
-  components: {
-    XMarkIcon,
-  },
-  props: {
-    restaurant: {
-      type: Object,
-      required: true,
-    },
-  },
-  emits: ["delete-restaurant"],
-  computed: {
-    statusColor() {
-      switch (this.restaurant.status) {
-        case "Want to Try":
-          return "bg-yellow-100 text-yellow-800";
-        case "Recommended":
-          return "bg-green-100 text-green-800";
-        case "Do Not Recommend":
-          return "bg-red-100 text-red-800";
-        default:
-          return "";
-      }
-    },
-  },
-  methods: {
-    deleteRestaurant() {
-      this.$emit("delete-restaurant", this.restaurant);
-    },
-  },
-};
+<script lang="ts" setup>
+  import { XMarkIcon } from '@heroicons/vue/24/outline'
+  import { computed } from 'vue'
+  import type { Restaurant } from '@/types'
+
+  const props = defineProps<{
+    restaurant: Restaurant
+  }>()
+
+  const emit = defineEmits<{
+    (e: 'delete-restaurant', restaurant: Restaurant): void
+  }>()
+
+  const statusColor = computed(() => {
+    switch (props.restaurant.status) {
+      case 'Want to Try':
+        return 'bg-yellow-100 text-yellow-800'
+      case 'Recommended':
+        return 'bg-green-100 text-green-800'
+      case 'Do Not Recommend':
+        return 'bg-red-100 text-red-800'
+      default:
+        return ''
+    }
+  })
+
+  const deleteRestaurant = () => {
+    emit('delete-restaurant', props.restaurant)
+  }
 </script>
 
 <template>
@@ -43,8 +39,7 @@ export default {
         <div class="flex flex-shrink-0 ml-2">
           <p
             class="inline-flex px-2 text-xs font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
-            :class="statusColor"
-          >
+            :class="statusColor">
             {{ restaurant.status }}
           </p>
         </div>
@@ -52,8 +47,7 @@ export default {
       <div class="mt-2 sm:flex sm:justify-between">
         <div class="sm:flex">
           <p
-            class="flex items-center font-light text-gray-500 text-md dark:text-gray-300"
-          >
+            class="flex items-center font-light text-gray-500 text-md dark:text-gray-300">
             {{ restaurant.address }}
           </p>
         </div>
@@ -61,7 +55,6 @@ export default {
     </div>
     <XMarkIcon
       @click="deleteRestaurant"
-      class="block h-6 w-6 cursor-pointer text-red-400 float-right -mt-6"
-    />
+      class="block h-6 w-6 cursor-pointer text-red-400 float-right -mt-6" />
   </div>
 </template>

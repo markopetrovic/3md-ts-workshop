@@ -93,13 +93,15 @@ function log(message: string): void {
 
 // Type Aliases
 type User = {
-  name: string
+  readonly name: string
   age: number
+  register?(): void
 }
 const user: User = {
   name: 'John',
   age: 30
 }
+// user.name = 'Sara' // Error
 // --------------------------------------------------------------------------------------------------------------------
 
 // Interface
@@ -117,7 +119,7 @@ interface Animal {
   sound(): void
 }
 interface Cat extends Animal {
-  purr?(): void
+  purr(): void
 }
 
 const tom: Cat = {
@@ -183,6 +185,10 @@ type Person1 = {
 
 type PersonPartial = Partial<Person1>
 
+const per: PersonPartial = {
+  name: 'John'
+}
+
 // This is equivalent to:
 // type PersonPartial = {
 //     name?: string;
@@ -198,6 +204,12 @@ type Person2 = {
   occupation: string
 }
 type PersonWithoutAge = Omit<Person2, 'age'>
+
+const pr: PersonWithoutAge = {
+  name: 'John',
+  occupation: 'Web Developer',
+  age: 30
+}
 // The type PersonWithoutAge is equivalent to:
 // {
 //   name: string;

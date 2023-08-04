@@ -1,18 +1,30 @@
-<script>
-  import { v4 as uuidv4 } from 'uuid'
+<script lang="ts" setup>
+  // import { v4 as uuidv4 } from 'uuid'
   import { restaurantStatusList } from '@/utils/constants'
-  export default {
-    emits: ['add-new-restaurant', 'cancel-new-restaurant'],
-    data: () => ({
-      newRestaurant: {
-        id: uuidv4(),
-        name: '',
-        address: '',
-        website: '',
-        status: 'Want to Try'
-      },
-      restaurantStatusList
-    })
+  import { Restaurant } from '@/types'
+  import { ref } from 'vue'
+
+  type DateShape = {
+    newRestaurant: Restaurant
+    restaurantStatusList: typeof restaurantStatusList
+  }
+
+  type IEmits = {
+    (e: 'add-new-restaurant', restaurant: Restaurant): void
+    (e: 'cancel-new-restaurant'): void
+  }
+  const emit = defineEmits<IEmits>()
+
+  const newRestaurant = ref<Restaurant>({
+    id: '',
+    name: '',
+    address: '',
+    website: '',
+    status: 'Want to Try'
+  })
+
+  const addNewRestaurant = () => {
+    emit('add-new-restaurant', newRestaurant.value)
   }
 </script>
 
@@ -73,12 +85,12 @@
     <div class="field">
       <div class="buttons">
         <button
-          @click="$emit('add-new-restaurantt', newRestaurant)"
+          @click="addNewRestaurant"
           class="px-4 py-0.5 font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-300 mr-2">
           Create
         </button>
         <button
-          @click="$emit('cancel-new-restaurant')"
+          @click="emit('cancel-new-restaurant')"
           class="px-4 py-0.5 font-font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring focus:ring-red-300">
           Cancel
         </button>
